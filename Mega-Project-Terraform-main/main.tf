@@ -103,6 +103,8 @@ resource "aws_eks_addon" "ebs_csi_driver" {
   
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
+
+  depends_on = [aws_eks_node_group.devopsshack]
 }
 
 
@@ -116,6 +118,11 @@ resource "aws_eks_node_group" "devopsshack" {
     desired_size = 3
     max_size     = 3
     min_size     = 3
+  }
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "optional"  # Changed from required to optional
+    http_put_response_hop_limit = 2
   }
 
   instance_types = ["t3.small"]
